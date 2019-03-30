@@ -1,0 +1,78 @@
+---
+name: PreCommitChecks
+repos:
+  - name: pre-commit-hooks Check Utilities | https://github.com/pre-commit/pre-commit-hooks
+    repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.1.0
+    hooks:
+      - id: check-json
+        name: JSON | Validation
+        verbose: true
+        entry: check-json
+        types: [file,non-executable,text,json]
+      - id: pretty-format-json
+        name: JSON | Pretty Print
+        entry: pretty-format-json
+        args: [--autofix]
+        verbose: true
+        types: [file,non-executable,text,json]
+      - id: check-yaml
+        name: YAML | Validation
+        entry: check-yaml
+        types: [file,non-executable,text,yaml]
+      - id: check-symlinks
+        name: Symlinks | Validation
+        entry: check-symlinks
+        types: [symlink]
+      - id: check-merge-conflict
+        name: Files | Merge Conflict Detector
+        entry: check-merge-conflict
+        types: [file]
+      - id: detect-private-key
+        name: Files | Private Key Detector
+        entry: detect-private-key
+        types: [file]
+      - id: end-of-file-fixer
+        name: File | File Ending Normalization
+        entry: end-of-file-fixer
+        types: [file,text]
+        exclude_types: [binary]
+      - id: check-ast
+        name: Python | Validation
+        entry: check-ast
+        files: ^.*\.py$
+        types: [file,python]
+      - id: fix-encoding-pragma
+        name: Python | Encoding
+        entry: fix-encoding-pragma
+        types: [file,python]
+      - id: check-added-large-files
+        name: Files | Size Limit
+        entry: check-added-large-files
+        args: [--maxkb=1024]
+        types: [file]
+      - id: check-case-conflict
+        name: Files | Case Validation
+        entry: check-added-large-files
+        types: [file]
+
+
+  - name: Local Validations
+    repo: local
+    hooks:
+        - id: validate_manifest
+          name: .pre-commit-hooks.yaml | Validation
+          description: This validator validates a pre-commit hooks manifest file
+          entry: pre-commit-validate-manifest
+          language: python
+          files: ^(\.pre-commit-hooks\.yaml)$
+        - id: hook.sh
+          name: Execute Local Shell Script | bin/hook.sh
+          entry: bin/hook.sh
+          language: script
+          files: '.*'
+        - id: fail.sh
+          name: Execute Local Shell Script | bin/fail.sh
+          entry: bin/fail.sh
+          language: script
+          files: '.*'
